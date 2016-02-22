@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Nested</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_expand_list_view">ExpandListViewActivity</string>
+    <string name="title_activity_previous">PreviousActivity</string>
+</resources>
