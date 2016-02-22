@@ -65,48 +65,51 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    class GroupHolder {
+        TextView tv_expand_name;
+        TextView tv_expand_edit;
+    }
+
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_parent_expand, null);
-        TextView tv_expand_name = (TextView) view.findViewById(R.id.tv_expand_name);
-        tv_expand_name.setText(getGroup(groupPosition).toString());
-        TextView tv_expand_edit = (TextView) view.findViewById(R.id.tv_expand_edit);
-        tv_expand_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "编辑被点击,第几组：" + groupPosition, Toast.LENGTH_SHORT).show();
 
-            }
-        });
-        return view;
+        GroupHolder groupHolder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.layout_parent_expand, null);
+            groupHolder=new GroupHolder();
+            groupHolder.tv_expand_name = (TextView) convertView.findViewById(R.id.tv_expand_name);
+            groupHolder.tv_expand_edit = (TextView) convertView.findViewById(R.id.tv_expand_edit);
+            convertView.setTag(groupHolder);
+        } else {
+            groupHolder = (GroupHolder) convertView.getTag();
+        }
+
+        groupHolder.tv_expand_name.setText(getGroup(groupPosition).toString());
+        return convertView;
+    }
+
+    class ChildHolder {
+        TextView tv_expand_child_name;
+        SimpleDraweeView iv_expand_child_icon;
     }
 
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        LinearLayout linearLayout = new LinearLayout(context);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_child_expand, null);
-        TextView tv_expand_child_name = (TextView) view.findViewById(R.id.tv_expand_child_name);
-        tv_expand_child_name.setText(getChild(groupPosition, childPosition).toString());
-        tv_expand_child_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Parent和Child分别为：" + groupPosition + " , " + childPosition, Toast.LENGTH_SHORT).show();
-            }
-        });
-        TextView line = new TextView(context);
-        SimpleDraweeView iv_expand_child_icon = (SimpleDraweeView) view.findViewById(R.id.iv_expand_child_icon);
-        iv_expand_child_icon.setImageURI(Uri.parse(imageUri));
-        TextView tv_is_edit = (TextView) view.findViewById(R.id.tv_is_edit);
-
-        linearLayout.addView(view, params);
-        line.setBackgroundColor(Color.BLUE);
-        line.setHeight(1);
-        if (childPosition != expandBeanList.get(groupPosition).getChild().size() - 1) {
-            linearLayout.addView(line,params);
+        ChildHolder childHolder = null;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.layout_child_expand, null);
+            childHolder=new ChildHolder();
+            childHolder.tv_expand_child_name = (TextView) convertView.findViewById(R.id.tv_expand_child_name);
+            childHolder.iv_expand_child_icon = (SimpleDraweeView) convertView.findViewById(R.id.iv_expand_child_icon);
+            convertView.setTag(childHolder);
+        } else {
+            childHolder = (ChildHolder) convertView.getTag();
         }
-        return linearLayout;
+
+        childHolder.tv_expand_child_name.setText(getChild(groupPosition, childPosition).toString());
+        childHolder.iv_expand_child_icon.setImageURI(Uri.parse(imageUri));
+
+        return convertView;
     }
 
     @Override
