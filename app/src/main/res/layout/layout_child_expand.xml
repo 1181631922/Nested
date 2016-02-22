@@ -32,4 +32,16 @@
         android:textColor="@android:color/black"
         android:textSize="18dp" />
 
+    <TextView
+        android:id="@+id/tv_is_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:text="编辑状态"
+        android:visibility="gone"
+        android:textColor="@android:color/black"
+        android:textSize="18dp"/>
+
 </LinearLayout>

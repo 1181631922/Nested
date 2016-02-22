@@ -32,9 +32,15 @@ import com.fanyafeng.nested.ChangeData.ChangeDataBean;
 import com.fanyafeng.nested.ChangeData.ChangeDataDialog;
 import com.fanyafeng.nested.R;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ExpandListViewActivity extends BaseActivity {
     private ExpandableListView expand_listview;
     private String imageUri = "http://www.apkbus.com/data/attachment/forum/201402/27/154958qgczo5a17ia3u3c4.png";
+    private List<ExpandBean> expandBeanList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,22 @@ public class ExpandListViewActivity extends BaseActivity {
     private void initView() {
         expand_listview = (ExpandableListView) findViewById(R.id.expand_listview);
         expand_listview.setGroupIndicator(null);
+
+        String[] wei = new String[]{"夏侯淳", "甄姬", "许褚", "郭嘉", "司马", "杨修"};
+        String[] shu=new String[]{"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"};
+        String[] wu=new String[]{"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"};
+
+        ExpandBean expandBean0 = new ExpandBean("魏国", Arrays.asList(wei));
+        expandBeanList.add(0,expandBean0);
+        ExpandBean expandBean1=new ExpandBean("蜀国",Arrays.asList(shu));
+        expandBeanList.add(1,expandBean1);
+        ExpandBean expandBean2=new ExpandBean("吴国",Arrays.asList(wu));
+        expandBeanList.add(2,expandBean2);
+        for (int i=0;i<4;i++){
+            ExpandBean expandBean3=new ExpandBean("吴国",Arrays.asList(wu));
+            expandBeanList.add(expandBean3);
+        }
+
     }
 
     private void initData() {
@@ -65,9 +87,11 @@ public class ExpandListViewActivity extends BaseActivity {
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
-        expand_listview.setAdapter(expandableListAdapter);
+        ExpandAdapter expandAdapter=new ExpandAdapter(this,expandBeanList);
+        expand_listview.setAdapter(expandAdapter);
+//        expand_listview.setAdapter(expandableListAdapter);
 //        将子项全部展开
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < expandBeanList.size(); i++) {
             expand_listview.expandGroup(i);
         }
 //        这是parent不能点击
@@ -81,7 +105,7 @@ public class ExpandListViewActivity extends BaseActivity {
 
     final ExpandableListAdapter expandableListAdapter = new BaseExpandableListAdapter() {
 
-        int[] logos = new int[]{R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher};
+
         private String[] generalsTypes = new String[]{"魏国", "蜀国", "吴国"};
         private String[][] generals = new String[][]{
                 {"夏侯淳", "甄姬", "许褚", "郭嘉", "司马", "杨修"},
@@ -93,38 +117,26 @@ public class ExpandListViewActivity extends BaseActivity {
                 {"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"},
                 {"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"}
         };
-        private int[][] generallogos = new int[][]{
-                {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher},
-                {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher},
-                {R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher}
-        };
 
-        TextView getTextView() {
-            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 64);
-            TextView textView = new TextView(ExpandListViewActivity.this);
-            textView.setLayoutParams(layoutParams);
-            textView.setGravity(Gravity.CENTER_VERTICAL);
-            textView.setPadding(36, 0, 0, 0);
-            textView.setTextSize(20);
-            textView.setTextColor(Color.BLACK);
-            return textView;
-        }
-
+        //group个数
         @Override
         public int getGroupCount() {
             return generalsTypes.length;
         }
 
+        //        相应的group下的child个数
         @Override
         public int getChildrenCount(int groupPosition) {
             return generals[groupPosition].length;
         }
 
+        //得到对应的group数据
         @Override
         public Object getGroup(int groupPosition) {
             return generalsTypes[groupPosition];
         }
 
+        //得到相应group下child的数据
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             return generals[groupPosition][childPosition];
@@ -146,7 +158,7 @@ public class ExpandListViewActivity extends BaseActivity {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
             View view = LayoutInflater.from(ExpandListViewActivity.this).inflate(R.layout.layout_parent_expand, null);
             TextView tv_expand_name = (TextView) view.findViewById(R.id.tv_expand_name);
@@ -155,59 +167,32 @@ public class ExpandListViewActivity extends BaseActivity {
             tv_expand_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ChangeDataBean changeDataBean = new ChangeDataBean(123, "password");
-                    ChangeDataDialog changeDataDialog = new ChangeDataDialog(ExpandListViewActivity.this, R.style.mystyle, R.layout.layout_dialog_input, changeDataBean, new ChangeDataDialog.InputListener() {
-                        @Override
-                        public void getNameAndPassword(String number, String password) {
-                            Toast.makeText(ExpandListViewActivity.this, number + password, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    changeDataDialog.getWindow().setGravity(Gravity.BOTTOM);
-                    changeDataDialog.show();
+                    Toast.makeText(ExpandListViewActivity.this, "编辑被点击,第几组：" + groupPosition, Toast.LENGTH_SHORT).show();
+
                 }
             });
             return view;
-
-
-//            LinearLayout linearLayout = new LinearLayout(ExpandListViewActivity.this);
-//            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-//            ImageView logo = new ImageView(ExpandListViewActivity.this);
-//            logo.setImageResource(logos[groupPosition]);
-//            linearLayout.addView(logo);
-//            TextView textView = getTextView();
-//            textView.setTextColor(Color.BLACK);
-//            textView.setText(getGroup(groupPosition).toString());
-//            textView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(ExpandListViewActivity.this, "点我啊", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            linearLayout.addView(textView);
-//            return linearLayout;
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-//            LinearLayout ll = new LinearLayout(ExpandListViewActivity.this);
-//            ll.setPadding(200, 0, 0, 0);
-//            ll.setOrientation(LinearLayout.HORIZONTAL);
-//            ImageView generallogo = new ImageView(ExpandListViewActivity.this);
-//            generallogo.setImageResource(generallogos[groupPosition][childPosition]);
-//            ll.addView(generallogo);
-//            TextView textView = getTextView();
-//            textView.setText(getChild(groupPosition, childPosition).toString());
-//            ll.addView(textView);
-//            return ll;
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             LinearLayout linearLayout = new LinearLayout(ExpandListViewActivity.this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             View view = LayoutInflater.from(ExpandListViewActivity.this).inflate(R.layout.layout_child_expand, null);
             TextView tv_expand_child_name = (TextView) view.findViewById(R.id.tv_expand_child_name);
             tv_expand_child_name.setText(getChild(groupPosition, childPosition).toString());
+            tv_expand_child_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(ExpandListViewActivity.this, "Parent和Child分别为：" + groupPosition + " , " + childPosition, Toast.LENGTH_SHORT).show();
+                }
+            });
             TextView line = new TextView(ExpandListViewActivity.this);
-            SimpleDraweeView iv_expand_child_icon=(SimpleDraweeView)view.findViewById(R.id.iv_expand_child_icon);
+            SimpleDraweeView iv_expand_child_icon = (SimpleDraweeView) view.findViewById(R.id.iv_expand_child_icon);
             iv_expand_child_icon.setImageURI(Uri.parse(imageUri));
-            linearLayout.addView(view,params);
+            TextView tv_is_edit = (TextView) view.findViewById(R.id.tv_is_edit);
+
+            linearLayout.addView(view, params);
             line.setTextColor(Color.BLACK);
             line.setHeight(1);
             if (!isLastChild) {
