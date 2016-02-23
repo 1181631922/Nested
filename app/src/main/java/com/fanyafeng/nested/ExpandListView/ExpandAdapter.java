@@ -85,7 +85,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_parent_expand, null);
             groupHolder = new GroupHolder();
@@ -99,17 +99,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             groupHolder = (GroupHolder) convertView.getTag();
         }
 //        checkbox状态
-        groupHolder.check_parent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
-                } else {
-                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
-                }
-                notifyDataSetChanged();
-            }
-        });
+        groupHolder.check_parent.setOnClickListener(new GroupClick(groupPosition));
 //        是否处于选中状态
         if (expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
             groupHolder.check_parent.setChecked(true);
@@ -132,6 +122,32 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         groupHolder.tv_expand_edit.setOnClickListener(new GroupViewClick(groupPosition));
         return convertView;
     }
+
+    class GroupClick implements View.OnClickListener {
+        private int groupPosition;
+
+        public GroupClick(int groupPosition) {
+            this.groupPosition = groupPosition;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int childCount = expandBeanList.get(groupPosition).getChild().size();
+            if (!expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
+                expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
+                for (int i = 0; i < childCount; i++) {
+                    expandBeanList.get(groupPosition).getChild().get(i).setChildIsChecked(true);
+                }
+            } else {
+                expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
+                for (int i = 0; i < childCount; i++) {
+                    expandBeanList.get(groupPosition).getChild().get(i).setChildIsChecked(false);
+                }
+            }
+            notifyDataSetChanged();
+        }
+    }
+
 
     /**
      * 使某个组处于编辑状态
@@ -193,24 +209,14 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             childHolder = (ChildHolder) convertView.getTag();
         }
 
-        childHolder.check_child.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-            }
-        });
-
-        if (expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
-            expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(true);
-        } else {
-            expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(false);
-        }
         if (expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
             childHolder.check_child.setChecked(true);
         } else {
             childHolder.check_child.setChecked(false);
         }
 
+        childHolder.check_child.setOnCheckedChangeListener(new ChildCheckChange(groupPosition, childPosition));
         if (expandBeanList.get(groupPosition).getGroup().isGroupIsEdit()) {
             childHolder.tv_done_edit.setVisibility(View.GONE);
             childHolder.layout_is_edit.setVisibility(View.VISIBLE);
@@ -241,6 +247,40 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         });
 
         return convertView;
+    }
+
+    class ChildCheckChange implements CompoundButton.OnCheckedChangeListener {
+        private int groupPosition;
+        private int childPosition;
+
+        public ChildCheckChange(int groupPosition, int childPosition) {
+            this.groupPosition = groupPosition;
+            this.childPosition = childPosition;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            int childCount = expandBeanList.get(groupPosition).getChild().size();
+            boolean isAllSelect = true;
+            if (isChecked) {
+                expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(true);
+                for (int i = 0; i < childCount; i++) {
+                    if (!expandBeanList.get(groupPosition).getChild().get(i).isChildIsChecked()) {
+                        isAllSelect = false;
+                        break;
+                    }
+                }
+                if (isAllSelect) {
+                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
+                } else {
+                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
+                }
+            } else {
+                expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(false);
+                expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
+            }
+            notifyDataSetChanged();
+        }
     }
 
 
