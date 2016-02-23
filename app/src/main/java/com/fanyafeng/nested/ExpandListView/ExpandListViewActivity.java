@@ -69,14 +69,32 @@ public class ExpandListViewActivity extends BaseActivity {
         String[] shu=new String[]{"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"};
         String[] wu=new String[]{"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"};
 
-        ExpandBean expandBean0 = new ExpandBean("魏国", Arrays.asList(wei));
+        List<ChildItemBean> weiChildItemBeanList=new ArrayList<>();
+        for (int i=0;i<6;i++){
+            ChildItemBean childItemBean=new ChildItemBean(i,"夏侯"+i);
+            weiChildItemBeanList.add(i,childItemBean);
+        }
+
+        List<ChildItemBean> shuChildItemBeanList=new ArrayList<>();
+        for (int i=0;i<7;i++){
+            ChildItemBean childItemBean=new ChildItemBean(i,"赵云"+i);
+            shuChildItemBeanList.add(i,childItemBean);
+        }
+
+        List<ChildItemBean> wuChildItemBeanList=new ArrayList<>();
+        for (int i=0;i<5;i++){
+            ChildItemBean childItemBean=new ChildItemBean(i,"周瑜"+i);
+            wuChildItemBeanList.add(i,childItemBean);
+        }
+
+        ExpandBean expandBean0 = new ExpandBean("魏国", weiChildItemBeanList);
         expandBeanList.add(0,expandBean0);
-        ExpandBean expandBean1=new ExpandBean("蜀国",Arrays.asList(shu));
+        ExpandBean expandBean1=new ExpandBean("蜀国",shuChildItemBeanList);
         expandBeanList.add(1,expandBean1);
-        ExpandBean expandBean2=new ExpandBean("吴国",Arrays.asList(wu));
+        ExpandBean expandBean2=new ExpandBean("吴国",wuChildItemBeanList);
         expandBeanList.add(2,expandBean2);
         for (int i=0;i<4;i++){
-            ExpandBean expandBean3=new ExpandBean("吴国",Arrays.asList(wu));
+            ExpandBean expandBean3=new ExpandBean("吴国",wuChildItemBeanList);
             expandBeanList.add(expandBean3);
         }
 
@@ -190,7 +208,7 @@ public class ExpandListViewActivity extends BaseActivity {
             TextView line = new TextView(ExpandListViewActivity.this);
             SimpleDraweeView iv_expand_child_icon = (SimpleDraweeView) view.findViewById(R.id.iv_expand_child_icon);
             iv_expand_child_icon.setImageURI(Uri.parse(imageUri));
-            TextView tv_is_edit = (TextView) view.findViewById(R.id.tv_is_edit);
+            TextView tv_is_edit = (TextView) view.findViewById(R.id.tv_done_edit);
 
             linearLayout.addView(view, params);
             line.setTextColor(Color.BLACK);

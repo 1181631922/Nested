@@ -28,20 +28,58 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:text="某某某旗舰店"
+        android:text="旗舰店"
         android:textColor="@android:color/black"
         android:textSize="18dp" />
 
     <TextView
-        android:id="@+id/tv_is_edit"
+        android:id="@+id/tv_done_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:gravity="center_vertical"
         android:layout_marginLeft="15dp"
-        android:text="编辑状态"
-        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:text="x1　道符"
         android:textColor="@android:color/black"
-        android:textSize="18dp"/>
+        android:textSize="18dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_is_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_count_reduce"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:background="#9F897E"
+            android:text="—"
+            android:textColor="@android:color/white" />
+
+
+        <EditText
+            android:id="@+id/content_fu_count"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="#E5DED8"
+            android:digits="0123456789"
+            android:gravity="center_vertical|center_horizontal"
+            android:inputType="number"
+            android:longClickable="false"
+            android:maxLength="2"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/btn_count_add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="#9F897E"
+            android:text="+"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
 </LinearLayout>
