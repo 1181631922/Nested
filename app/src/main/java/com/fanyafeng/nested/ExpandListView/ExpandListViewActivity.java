@@ -65,26 +65,28 @@ public class ExpandListViewActivity extends BaseActivity {
         expand_listview = (ExpandableListView) findViewById(R.id.expand_listview);
         expand_listview.setGroupIndicator(null);
 
-        String[] wei = new String[]{"夏侯淳", "甄姬", "许褚", "郭嘉", "司马", "杨修"};
-        String[] shu = new String[]{"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"};
-        String[] wu = new String[]{"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"};
-
         List<ChildItemBean> weiChildItemBeanList = new ArrayList<>();
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i <= 4; i++) {
             ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "夏侯" + i, i);
             weiChildItemBeanList.add(childItemBean);
         }
 
         List<ChildItemBean> shuChildItemBeanList = new ArrayList<>();
-        for (int i = 1; i <= 7; i++) {
+        for (int i = 1; i <= 3; i++) {
             ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "赵云" + i, i);
             shuChildItemBeanList.add(childItemBean);
         }
 
         List<ChildItemBean> wuChildItemBeanList = new ArrayList<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 6; i++) {
             ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "周瑜" + i, i);
             wuChildItemBeanList.add(childItemBean);
+        }
+
+        List<ChildItemBean> qunChildItemBeanList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "华佗" + i, i);
+            qunChildItemBeanList.add(childItemBean);
         }
 
         GroupItemBean groupItemBean0 = new GroupItemBean(false, imageUri, "魏国", false, false);
@@ -93,14 +95,12 @@ public class ExpandListViewActivity extends BaseActivity {
         GroupItemBean groupItemBean1 = new GroupItemBean(false, imageUri, "蜀国", true, false);
         ExpandBean expandBean1 = new ExpandBean(groupItemBean1, shuChildItemBeanList);
         expandBeanList.add(1, expandBean1);
-        GroupItemBean groupItemBean2 = new GroupItemBean(false, imageUri, "吴国", true, false);
+        GroupItemBean groupItemBean2 = new GroupItemBean(false, imageUri, "吴国", false, false);
         ExpandBean expandBean2 = new ExpandBean(groupItemBean2, wuChildItemBeanList);
         expandBeanList.add(2, expandBean2);
-        for (int i = 0; i < 4; i++) {
-            GroupItemBean groupItemBean3 = new GroupItemBean(false, imageUri, "吴国", false, false);
-            ExpandBean expandBean3 = new ExpandBean(groupItemBean3, wuChildItemBeanList);
-            expandBeanList.add(expandBean3);
-        }
+        GroupItemBean groupItemBean3 = new GroupItemBean(false, imageUri, "群国", true, false);
+        ExpandBean expandBean3 = new ExpandBean(groupItemBean3, qunChildItemBeanList);
+        expandBeanList.add(3, expandBean3);
 
     }
 

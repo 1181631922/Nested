@@ -216,7 +216,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             childHolder.check_child.setChecked(false);
         }
 
-        childHolder.check_child.setOnCheckedChangeListener(new ChildCheckChange(groupPosition, childPosition));
+        childHolder.check_child.setOnClickListener(new ChildClick(groupPosition, childPosition));
         if (expandBeanList.get(groupPosition).getGroup().isGroupIsEdit()) {
             childHolder.tv_done_edit.setVisibility(View.GONE);
             childHolder.layout_is_edit.setVisibility(View.VISIBLE);
@@ -249,20 +249,21 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-    class ChildCheckChange implements CompoundButton.OnCheckedChangeListener {
+    class ChildClick implements View.OnClickListener {
         private int groupPosition;
         private int childPosition;
 
-        public ChildCheckChange(int groupPosition, int childPosition) {
+        public ChildClick(int groupPosition, int childPosition) {
             this.groupPosition = groupPosition;
             this.childPosition = childPosition;
         }
 
+
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        public void onClick(View v) {
             int childCount = expandBeanList.get(groupPosition).getChild().size();
             boolean isAllSelect = true;
-            if (isChecked) {
+            if (!expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
                 expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(true);
                 for (int i = 0; i < childCount; i++) {
                     if (!expandBeanList.get(groupPosition).getChild().get(i).isChildIsChecked()) {
