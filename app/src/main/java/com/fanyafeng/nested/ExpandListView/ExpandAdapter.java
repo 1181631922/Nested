@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -84,7 +85,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_parent_expand, null);
             groupHolder = new GroupHolder();
@@ -97,6 +98,18 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         } else {
             groupHolder = (GroupHolder) convertView.getTag();
         }
+//        checkbox状态
+        groupHolder.check_parent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
+                } else {
+                    expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
+                }
+                notifyDataSetChanged();
+            }
+        });
 //        是否处于选中状态
         if (expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
             groupHolder.check_parent.setChecked(true);
@@ -179,6 +192,25 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         } else {
             childHolder = (ChildHolder) convertView.getTag();
         }
+
+        childHolder.check_child.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
+
+        if (expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
+            expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(true);
+        } else {
+            expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(false);
+        }
+        if (expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
+            childHolder.check_child.setChecked(true);
+        } else {
+            childHolder.check_child.setChecked(false);
+        }
+
         if (expandBeanList.get(groupPosition).getGroup().isGroupIsEdit()) {
             childHolder.tv_done_edit.setVisibility(View.GONE);
             childHolder.layout_is_edit.setVisibility(View.VISIBLE);
