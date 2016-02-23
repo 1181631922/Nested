@@ -112,8 +112,6 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         public void onClick(View v) {
             int groupId = v.getId();
             if (groupId == groupHolder.tv_expand_edit.getId()) {
-//                Toast.makeText(context, "点击的position：" + groupPosition, Toast.LENGTH_SHORT).show();
-//                groupHolder.tv_expand_edit.setText("点击");
                 if (stringList.get(groupPosition).equals("编辑")) {
                     stringList.set(groupPosition, "完成");
                 } else {
@@ -135,7 +133,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 //        ChildHolder childHolder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_child_expand, null);
@@ -159,23 +157,37 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             childHolder.tv_done_edit.setVisibility(View.VISIBLE);
             childHolder.layout_is_edit.setVisibility(View.GONE);
         }
-        final ChildItemBean childItemBean = (ChildItemBean) getChild(groupPosition, childPosition);
+        ChildItemBean childItemBean = (ChildItemBean) getChild(groupPosition, childPosition);
         childHolder.tv_expand_child_name.setText(childItemBean.getName());
-        childHolder.tv_done_edit.setText("X" + childItemBean.getCount() + "　道符");
+//        childHolder.tv_done_edit.setText("X" + childItemBean.getCount() + "　道符");
+        childHolder.tv_done_edit.setText("X" + expandBeanList.get(groupPosition).getChild().get(childPosition).getCount() + "　道符");
         childHolder.content_fu_count.setText(String.valueOf(childItemBean.getCount()));
         childHolder.iv_expand_child_icon.setImageURI(Uri.parse(imageUri));
-        childHolder.btn_count_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int mycount = Integer.parseInt(childHolder.content_fu_count.getText().toString().trim());
-                childItemBean.setCount(mycount++);
-                childHolder.content_fu_count.setText(String.valueOf(mycount++));
-                Toast.makeText(context, "符增加按钮被点击" + mycount++, Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged();
-            }
-        });
+        childHolder.btn_count_add.setOnClickListener(new ChildViewClick(groupPosition, childPosition));
+        childHolder.btn_count_reduce.setOnClickListener(new ChildViewClick(groupPosition, childPosition));
 
         return convertView;
+    }
+
+    class ChildViewClick implements View.OnClickListener {
+        private int groupPosition;
+        private int childPosition;
+
+        public ChildViewClick(int groupPosition, int childPosition) {
+            this.groupPosition = groupPosition;
+            this.childPosition = childPosition;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int mycount = expandBeanList.get(groupPosition).getChild().get(childPosition).getCount();
+            if (v.getId() == childHolder.btn_count_add.getId()) {
+                expandBeanList.get(groupPosition).getChild().get(childPosition).setCount(++mycount);
+            } else if (v.getId() == childHolder.btn_count_reduce.getId()) {
+                expandBeanList.get(groupPosition).getChild().get(childPosition).setCount(--mycount);
+            }
+            notifyDataSetChanged();
+        }
     }
 
 
