@@ -186,10 +186,14 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         Button btn_count_add;
         TextView tv_count_edit;
         TextView tv_count_del;
+        TextView tv_child_note;
+        TextView tv_child_express;
     }
 
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+        LinearLayout linearLayout = new LinearLayout(context);
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.layout_child_expand, null);
             childHolder = new ChildHolder();
@@ -203,12 +207,12 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             childHolder.btn_count_add = (Button) convertView.findViewById(R.id.btn_count_add);
             childHolder.tv_count_edit = (TextView) convertView.findViewById(R.id.tv_count_edit);
             childHolder.tv_count_del = (TextView) convertView.findViewById(R.id.tv_count_del);
-
+            childHolder.tv_child_note = (TextView) convertView.findViewById(R.id.tv_child_note);
+            childHolder.tv_child_express = (TextView) convertView.findViewById(R.id.tv_child_express);
             convertView.setTag(childHolder);
         } else {
             childHolder = (ChildHolder) convertView.getTag();
         }
-
 
         if (expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
             childHolder.check_child.setChecked(true);
@@ -245,6 +249,13 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                 changeDataDialog.show();
             }
         });
+        if (expandBeanList.get(groupPosition).getChild().size() == childPosition + 1) {
+            childHolder.tv_child_note.setVisibility(View.VISIBLE);
+            childHolder.tv_child_express.setVisibility(View.VISIBLE);
+        } else {
+            childHolder.tv_child_note.setVisibility(View.GONE);
+            childHolder.tv_child_express.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
