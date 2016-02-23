@@ -66,35 +66,39 @@ public class ExpandListViewActivity extends BaseActivity {
         expand_listview.setGroupIndicator(null);
 
         String[] wei = new String[]{"夏侯淳", "甄姬", "许褚", "郭嘉", "司马", "杨修"};
-        String[] shu=new String[]{"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"};
-        String[] wu=new String[]{"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"};
+        String[] shu = new String[]{"马超", "张飞", "刘备", "诸葛亮", "黄月英", "赵云", "马谡"};
+        String[] wu = new String[]{"吕蒙", "陆逊", "孙权", "周瑜", "孙尚香"};
 
-        List<ChildItemBean> weiChildItemBeanList=new ArrayList<>();
-        for (int i=0;i<6;i++){
-            ChildItemBean childItemBean=new ChildItemBean(i,"夏侯"+i);
-            weiChildItemBeanList.add(i,childItemBean);
+        List<ChildItemBean> weiChildItemBeanList = new ArrayList<>();
+        for (int i = 1; i <= 6; i++) {
+            ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "夏侯" + i, i);
+            weiChildItemBeanList.add(childItemBean);
         }
 
-        List<ChildItemBean> shuChildItemBeanList=new ArrayList<>();
-        for (int i=0;i<7;i++){
-            ChildItemBean childItemBean=new ChildItemBean(i,"赵云"+i);
-            shuChildItemBeanList.add(i,childItemBean);
+        List<ChildItemBean> shuChildItemBeanList = new ArrayList<>();
+        for (int i = 1; i <= 7; i++) {
+            ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "赵云" + i, i);
+            shuChildItemBeanList.add(childItemBean);
         }
 
-        List<ChildItemBean> wuChildItemBeanList=new ArrayList<>();
-        for (int i=0;i<5;i++){
-            ChildItemBean childItemBean=new ChildItemBean(i,"周瑜"+i);
-            wuChildItemBeanList.add(i,childItemBean);
+        List<ChildItemBean> wuChildItemBeanList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            ChildItemBean childItemBean = new ChildItemBean(false, imageUri, "周瑜" + i, i);
+            wuChildItemBeanList.add(childItemBean);
         }
 
-        ExpandBean expandBean0 = new ExpandBean("魏国", weiChildItemBeanList);
-        expandBeanList.add(0,expandBean0);
-        ExpandBean expandBean1=new ExpandBean("蜀国",shuChildItemBeanList);
-        expandBeanList.add(1,expandBean1);
-        ExpandBean expandBean2=new ExpandBean("吴国",wuChildItemBeanList);
-        expandBeanList.add(2,expandBean2);
-        for (int i=0;i<4;i++){
-            ExpandBean expandBean3=new ExpandBean("吴国",wuChildItemBeanList);
+        GroupItemBean groupItemBean0 = new GroupItemBean(false, imageUri, "魏国", false, false);
+        ExpandBean expandBean0 = new ExpandBean(groupItemBean0, weiChildItemBeanList);
+        expandBeanList.add(0, expandBean0);
+        GroupItemBean groupItemBean1 = new GroupItemBean(false, imageUri, "蜀国", true, false);
+        ExpandBean expandBean1 = new ExpandBean(groupItemBean1, shuChildItemBeanList);
+        expandBeanList.add(1, expandBean1);
+        GroupItemBean groupItemBean2 = new GroupItemBean(false, imageUri, "吴国", true, false);
+        ExpandBean expandBean2 = new ExpandBean(groupItemBean2, wuChildItemBeanList);
+        expandBeanList.add(2, expandBean2);
+        for (int i = 0; i < 4; i++) {
+            GroupItemBean groupItemBean3 = new GroupItemBean(false, imageUri, "吴国", false, false);
+            ExpandBean expandBean3 = new ExpandBean(groupItemBean3, wuChildItemBeanList);
             expandBeanList.add(expandBean3);
         }
 
@@ -105,7 +109,7 @@ public class ExpandListViewActivity extends BaseActivity {
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
-        ExpandAdapter expandAdapter=new ExpandAdapter(this,expandBeanList);
+        ExpandAdapter expandAdapter = new ExpandAdapter(this, expandBeanList);
         expand_listview.setAdapter(expandAdapter);
 //        expand_listview.setAdapter(expandableListAdapter);
 //        将子项全部展开

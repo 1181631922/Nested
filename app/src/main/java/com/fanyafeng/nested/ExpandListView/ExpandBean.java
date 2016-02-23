@@ -9,19 +9,19 @@ import java.util.List;
  * Created by fanyafeng on 2016/2/22,0022.
  */
 public class ExpandBean implements Comparable,Parcelable{
-    private String Group;
+    private GroupItemBean Group;
     private List<ChildItemBean> Child;
 
-    public ExpandBean(String group, List<ChildItemBean> child) {
+    public ExpandBean(GroupItemBean group, List<ChildItemBean> child) {
         Group = group;
         Child = child;
     }
 
-    public String getGroup() {
+    public GroupItemBean getGroup() {
         return Group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(GroupItemBean group) {
         Group = group;
     }
 
@@ -36,11 +36,10 @@ public class ExpandBean implements Comparable,Parcelable{
     @Override
     public String toString() {
         return "ExpandBean{" +
-                "Group='" + Group + '\'' +
+                "Group=" + Group +
                 ", Child=" + Child +
                 '}';
     }
-
 
     @Override
     public int compareTo(Object another) {
@@ -54,12 +53,12 @@ public class ExpandBean implements Comparable,Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(Group);
+        dest.writeParcelable(Group, flags);
         dest.writeTypedList(Child);
     }
 
     protected ExpandBean(Parcel in) {
-        Group = in.readString();
+        Group = in.readParcelable(GroupItemBean.class.getClassLoader());
         Child = in.createTypedArrayList(ChildItemBean.CREATOR);
     }
 
@@ -74,5 +73,4 @@ public class ExpandBean implements Comparable,Parcelable{
             return new ExpandBean[size];
         }
     };
-
 }

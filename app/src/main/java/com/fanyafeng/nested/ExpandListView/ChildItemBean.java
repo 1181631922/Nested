@@ -7,11 +7,39 @@ import android.os.Parcelable;
  * Created by fanyafeng on 2016/2/23,0023.
  */
 public class ChildItemBean implements Parcelable,Comparable{
-    private int count;
+    private boolean childIsChecked;
+    private String childImage;
     private String name;
+    private int count;
 
-    public ChildItemBean(int count, String name) {
+    public ChildItemBean(boolean childIsChecked, String childImage, String name, int count) {
+        this.childIsChecked = childIsChecked;
+        this.childImage = childImage;
+        this.name = name;
         this.count = count;
+    }
+
+    public boolean isChildIsChecked() {
+        return childIsChecked;
+    }
+
+    public void setChildIsChecked(boolean childIsChecked) {
+        this.childIsChecked = childIsChecked;
+    }
+
+    public String getChildImage() {
+        return childImage;
+    }
+
+    public void setChildImage(String childImage) {
+        this.childImage = childImage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -23,19 +51,13 @@ public class ChildItemBean implements Parcelable,Comparable{
         this.count = count;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
         return "ChildItemBean{" +
-                "count=" + count +
+                "childIsChecked=" + childIsChecked +
+                ", childImage='" + childImage + '\'' +
                 ", name='" + name + '\'' +
+                ", count=" + count +
                 '}';
     }
 
@@ -51,13 +73,17 @@ public class ChildItemBean implements Parcelable,Comparable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(count);
+        dest.writeByte((byte) (childIsChecked ? 1 : 0));
+        dest.writeString(childImage);
         dest.writeString(name);
+        dest.writeInt(count);
     }
 
     protected ChildItemBean(Parcel in) {
-        count = in.readInt();
+        childIsChecked = in.readByte() != 0;
+        childImage = in.readString();
         name = in.readString();
+        count = in.readInt();
     }
 
     public static final Creator<ChildItemBean> CREATOR = new Creator<ChildItemBean>() {
