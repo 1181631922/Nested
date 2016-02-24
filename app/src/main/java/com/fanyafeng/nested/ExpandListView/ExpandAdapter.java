@@ -301,8 +301,15 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         if (expandBeanList.get(groupPosition).getChild().size() == childPosition + 1) {
             childHolder.tv_child_note.setVisibility(View.VISIBLE);
             childHolder.tv_child_express.setVisibility(View.VISIBLE);
-            childHolder.tv_child_note.setText(expandBeanList.get(groupPosition).getGroup().getGroupName() + "动态数据");
-            childHolder.tv_child_express.setText("快递费用" + expandBeanList.get(groupPosition).getGroup().getGroupName());
+            int groupsize = expandBeanList.get(groupPosition).getChild().size();
+            int count = 0;
+            for (int i = 0; i < groupsize; i++) {
+                if (expandBeanList.get(groupPosition).getChild().get(i).isChildIsChecked()) {
+                    count += expandBeanList.get(groupPosition).getChild().get(i).getCount();
+                }
+            }
+            childHolder.tv_child_note.setText("数量：" + count + "个");
+            childHolder.tv_child_express.setText("快递费用：20元");
         } else {
             childHolder.tv_child_note.setVisibility(View.GONE);
             childHolder.tv_child_express.setVisibility(View.GONE);
