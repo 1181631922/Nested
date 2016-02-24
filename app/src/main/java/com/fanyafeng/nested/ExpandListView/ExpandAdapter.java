@@ -45,6 +45,23 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         this.adapterCallback = adapterCallback;
     }
 
+    public void isAllSelect(boolean isAllSelected) {
+        int groupSize;
+        if (expandBeanList != null) {
+            groupSize = expandBeanList.size();
+        } else {
+            return;
+        }
+        for (int i = 0; i < groupSize; i++) {
+            expandBeanList.get(i).getGroup().setGroupIsChecked(isAllSelected);
+            int childSize = expandBeanList.get(i).getChild().size();
+            for (int j = 0; j < childSize; j++) {
+                expandBeanList.get(i).getChild().get(j).setChildIsChecked(isAllSelected);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     public ExpandAdapter(Context context, List<ExpandBean> expandBeanList) {
         this.context = context;
@@ -142,7 +159,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View v) {
-            int groupSize=expandBeanList.size();
+            int groupSize = expandBeanList.size();
             int childCount = expandBeanList.get(groupPosition).getChild().size();
             if (!expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
                 expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
@@ -186,20 +203,19 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         @Override
         public void onClick(View v) {
             int groupId = v.getId();
-            boolean isAllChecked = false;
+            boolean isAllChecked = true;
             if (groupId == groupHolder.tv_expand_edit.getId()) {
                 if (expandBeanList.get(groupPosition).getGroup().isGroupIsEdit()) {
                     expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(false);
-                    isAllChecked = false;
                 } else {
                     expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(true);
-                    isAllChecked = true;
-                    int groupSize = expandBeanList.size();
-                    for (int i = 0; i < groupSize; i++) {
-                        if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
-                            isAllChecked = false;
-                            break;
-                        }
+
+                }
+                int groupSize = expandBeanList.size();
+                for (int i = 0; i < groupSize; i++) {
+                    if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                        isAllChecked = false;
+                        break;
                     }
                 }
                 adapterCallback.callBack(isAllChecked, expandBeanList);
@@ -307,7 +323,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View v) {
-            int groupSize=expandBeanList.size();
+            int groupSize = expandBeanList.size();
             int childCount = expandBeanList.get(groupPosition).getChild().size();
             boolean isAllSelect = true;
             if (!expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
@@ -388,7 +404,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         @Override
         public void onClick(View v) {
             int mycount = expandBeanList.get(groupPosition).getChild().get(childPosition).getCount();
-
+            int groupSize = expandBeanList.size();
             if (v.getId() == childHolder.btn_count_add.getId()) {
                 if (mycount < 99) {
                     expandBeanList.get(groupPosition).getChild().get(childPosition).setCount(++mycount);
@@ -402,7 +418,14 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                     Toast.makeText(context, "符的个数不能小于1", Toast.LENGTH_SHORT).show();
                 }
             }
-            adapterCallback.callBack(false, expandBeanList);
+            boolean isAllChecked = true;
+            for (int i = 0; i < groupSize; i++) {
+                if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                    isAllChecked = false;
+                    break;
+                }
+            }
+            adapterCallback.callBack(isAllChecked, expandBeanList);
             notifyDataSetChanged();
         }
     }

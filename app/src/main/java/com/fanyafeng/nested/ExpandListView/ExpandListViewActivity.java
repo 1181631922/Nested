@@ -43,10 +43,14 @@ public class ExpandListViewActivity extends BaseActivity {
     private ExpandableListView expand_listview;
     private String imageUri = "http://www.apkbus.com/data/attachment/forum/201402/27/154958qgczo5a17ia3u3c4.png";
     private List<ExpandBean> expandBeanList = new ArrayList<>();
+    private ExpandAdapter expandAdapter;
 
     private TextView tv_expand_price;
     private TextView tv_expand_commit;
     private CheckBox cb_expand_all;
+
+    private boolean isAdapterAllChecked = false;
+    private List<ExpandBean> myExpandBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,7 @@ public class ExpandListViewActivity extends BaseActivity {
 
     private void initView() {
         cb_expand_all = (CheckBox) findViewById(R.id.cb_expand_all);
+        cb_expand_all.setOnClickListener(this);
         tv_expand_price = (TextView) findViewById(R.id.tv_expand_price);
         tv_expand_commit = (TextView) findViewById(R.id.tv_expand_commit);
         tv_expand_commit.setOnClickListener(this);
@@ -119,12 +124,12 @@ public class ExpandListViewActivity extends BaseActivity {
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
-        ExpandAdapter expandAdapter = new ExpandAdapter(this, expandBeanList);
+        expandAdapter = new ExpandAdapter(this, expandBeanList);
         expand_listview.setAdapter(expandAdapter);
         expandAdapter.setCallback(new ExpandAdapter.AdapterCallback() {
             @Override
             public void callBack(boolean allSelected, List<ExpandBean> expandBeanCallList) {
-
+                myExpandBeanList = expandBeanCallList;
                 int count = 0;
                 int groupSize = expandBeanCallList.size();
                 for (int i = 0; i < groupSize; i++) {
@@ -135,9 +140,8 @@ public class ExpandListViewActivity extends BaseActivity {
                         }
                     }
                 }
-
                 tv_expand_price.setText(count + "个");
-
+                isAdapterAllChecked = allSelected;
                 cb_expand_all.setChecked(allSelected);
 
             }
@@ -162,6 +166,21 @@ public class ExpandListViewActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.tv_expand_commit:
 //                tv_expand_price.setText("确认点击");
+                break;
+            case R.id.cb_expand_all:
+                isAdapterAllChecked = !isAdapterAllChecked;
+                expandAdapter.isAllSelect(isAdapterAllChecked);
+                int count = 0;
+                int groupSize = myExpandBeanList.size();
+                for (int i = 0; i < groupSize; i++) {
+                    int childSize = myExpandBeanList.get(i).getChild().size();
+                    for (int j = 0; j < childSize; j++) {
+                        if (myExpandBeanList.get(i).getChild().get(j).isChildIsChecked()) {
+                            count += myExpandBeanList.get(i).getChild().get(j).getCount();
+                        }
+                    }
+                }
+                tv_expand_price.setText(count + "个");
                 break;
         }
     }
