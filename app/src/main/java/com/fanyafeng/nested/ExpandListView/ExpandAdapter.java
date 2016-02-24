@@ -388,7 +388,6 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                 expandBeanList.remove(groupPosition);
                 expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(false);
             }
-            adapterCallback.callBack(false, expandBeanList);
             notifyDataSetChanged();
         }
     }
