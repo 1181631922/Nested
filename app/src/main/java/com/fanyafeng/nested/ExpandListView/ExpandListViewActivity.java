@@ -121,7 +121,13 @@ public class ExpandListViewActivity extends BaseActivity {
 
     private void initData() {
 //同listview，可以添加头和脚
-//        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_address_message, null);
+        TextView tv_message_name = (TextView) view.findViewById(R.id.tv_message_name);
+        tv_message_name.setText("樊亚风");
+        TextView tv_message_note = (TextView) view.findViewById(R.id.tv_message_note);
+        tv_message_note.setText("动态更新备注信息");
+
+        expand_listview.addHeaderView(view);
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
 //        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
         expandAdapter = new ExpandAdapter(this, expandBeanList);
@@ -159,6 +165,7 @@ public class ExpandListViewActivity extends BaseActivity {
                 return true;
             }
         });
+        tv_message_note.setText("再次动态更新备注信息");
     }
 
     @Override
