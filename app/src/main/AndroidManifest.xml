@@ -32,6 +32,10 @@
         <activity
             android:name=".ChangeData.PreviousActivity"
             android:label="@string/title_activity_previous"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RatingBar.RatingBarActivity"
+            android:label="@string/title_activity_rating_bar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

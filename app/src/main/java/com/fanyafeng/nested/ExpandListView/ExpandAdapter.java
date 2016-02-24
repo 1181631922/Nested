@@ -35,6 +35,16 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
     private GroupHolder groupHolder;
     private ChildHolder childHolder;
 
+    private AdapterCallback adapterCallback;
+
+    public interface AdapterCallback {
+        public void callBack(boolean allSelected, List<ExpandBean> expandBeanCallList);
+    }
+
+    public void setCallback(AdapterCallback adapterCallback) {
+        this.adapterCallback = adapterCallback;
+    }
+
 
     public ExpandAdapter(Context context, List<ExpandBean> expandBeanList) {
         this.context = context;
@@ -132,17 +142,29 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View v) {
+            int groupSize=expandBeanList.size();
             int childCount = expandBeanList.get(groupPosition).getChild().size();
             if (!expandBeanList.get(groupPosition).getGroup().isGroupIsChecked()) {
                 expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(true);
                 for (int i = 0; i < childCount; i++) {
                     expandBeanList.get(groupPosition).getChild().get(i).setChildIsChecked(true);
                 }
+
+                boolean isAllChecked = true;
+                for (int i = 0; i < groupSize; i++) {
+                    if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                        isAllChecked = false;
+                        break;
+                    }
+                }
+                adapterCallback.callBack(isAllChecked, expandBeanList);
+
             } else {
                 expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
                 for (int i = 0; i < childCount; i++) {
                     expandBeanList.get(groupPosition).getChild().get(i).setChildIsChecked(false);
                 }
+                adapterCallback.callBack(false, expandBeanList);
             }
             notifyDataSetChanged();
         }
@@ -164,12 +186,23 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
         @Override
         public void onClick(View v) {
             int groupId = v.getId();
+            boolean isAllChecked = false;
             if (groupId == groupHolder.tv_expand_edit.getId()) {
                 if (expandBeanList.get(groupPosition).getGroup().isGroupIsEdit()) {
                     expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(false);
+                    isAllChecked = false;
                 } else {
                     expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(true);
+                    isAllChecked = true;
+                    int groupSize = expandBeanList.size();
+                    for (int i = 0; i < groupSize; i++) {
+                        if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                            isAllChecked = false;
+                            break;
+                        }
+                    }
                 }
+                adapterCallback.callBack(isAllChecked, expandBeanList);
                 notifyDataSetChanged();
             }
         }
@@ -274,6 +307,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 
         @Override
         public void onClick(View v) {
+            int groupSize=expandBeanList.size();
             int childCount = expandBeanList.get(groupPosition).getChild().size();
             boolean isAllSelect = true;
             if (!expandBeanList.get(groupPosition).getChild().get(childPosition).isChildIsChecked()) {
@@ -289,9 +323,20 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                 } else {
                     expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
                 }
+
+                boolean isAllChecked = true;
+                for (int i = 0; i < groupSize; i++) {
+                    if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                        isAllChecked = false;
+                        break;
+                    }
+                }
+                adapterCallback.callBack(isAllChecked, expandBeanList);
+
             } else {
                 expandBeanList.get(groupPosition).getChild().get(childPosition).setChildIsChecked(false);
                 expandBeanList.get(groupPosition).getGroup().setGroupIsChecked(false);
+                adapterCallback.callBack(false, expandBeanList);
             }
             notifyDataSetChanged();
         }
@@ -320,6 +365,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                 expandBeanList.remove(groupPosition);
                 expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(false);
             }
+            adapterCallback.callBack(false, expandBeanList);
             notifyDataSetChanged();
         }
     }
@@ -356,6 +402,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
                     Toast.makeText(context, "符的个数不能小于1", Toast.LENGTH_SHORT).show();
                 }
             }
+            adapterCallback.callBack(false, expandBeanList);
             notifyDataSetChanged();
         }
     }

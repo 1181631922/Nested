@@ -12,6 +12,7 @@ import com.fanyafeng.nested.BaseActivity;
 import com.fanyafeng.nested.ChangeData.PreviousActivity;
 import com.fanyafeng.nested.ExpandListView.ExpandListViewActivity;
 import com.fanyafeng.nested.R;
+import com.fanyafeng.nested.RatingBar.RatingBarActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
     private void initData() {
         findViewById(R.id.btn_1).setOnClickListener(this);
         findViewById(R.id.btn_2).setOnClickListener(this);
+        findViewById(R.id.btn_3).setOnClickListener(this);
     }
 
     @Override
@@ -52,6 +54,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_2:
                 startActivity(new Intent(MainActivity.this, PreviousActivity.class));
+                break;
+            case R.id.btn_3:
+                startActivity(new Intent(MainActivity.this, RatingBarActivity.class));
                 break;
         }
     }
