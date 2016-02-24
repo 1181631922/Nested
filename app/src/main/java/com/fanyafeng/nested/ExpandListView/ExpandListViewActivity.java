@@ -129,7 +129,8 @@ public class ExpandListViewActivity extends BaseActivity {
 
         expand_listview.addHeaderView(view);
 //        expand_listview.addHeaderView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
-//        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
+        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_address_message, null));
+        expand_listview.addFooterView(LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null));
         expandAdapter = new ExpandAdapter(this, expandBeanList);
         myExpandBeanList = expandBeanList;
         expand_listview.setAdapter(expandAdapter);
