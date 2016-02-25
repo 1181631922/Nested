@@ -46,7 +46,7 @@
             android:background="@android:color/white"
             android:gravity="center_horizontal|center_vertical"
             android:padding="10dp"
-            android:text="价格"
+            android:text="个数"
             android:textSize="20dp" />
 
         <TextView

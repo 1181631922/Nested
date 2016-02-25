@@ -278,7 +278,7 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             childHolder.layout_is_edit.setVisibility(View.GONE);
         }
         childHolder.tv_expand_child_name.setText(expandBeanList.get(groupPosition).getChild().get(childPosition).getName());
-        childHolder.tv_done_edit.setText("X" + expandBeanList.get(groupPosition).getChild().get(childPosition).getCount() + "　道符");
+        childHolder.tv_done_edit.setText("X" + expandBeanList.get(groupPosition).getChild().get(childPosition).getCount() + "　个");
         childHolder.content_fu_count.setText(String.valueOf(expandBeanList.get(groupPosition).getChild().get(childPosition).getCount()));
         childHolder.iv_expand_child_icon.setImageURI(Uri.parse(expandBeanList.get(groupPosition).getChild().get(childPosition).getChildImage()));
         childHolder.btn_count_add.setOnClickListener(new ChildViewClick(groupPosition, childPosition));
