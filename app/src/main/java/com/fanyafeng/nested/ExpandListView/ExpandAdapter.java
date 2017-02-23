@@ -387,7 +387,19 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
             if (expandBeanList.get(groupPosition).getChild().size() <= 0) {
                 expandBeanList.remove(groupPosition);
                 expandBeanList.get(groupPosition).getGroup().setGroupIsEdit(false);
+
             }
+
+            int groupSize = expandBeanList.size();
+            boolean isAllChecked = true;
+            for (int i = 0; i < groupSize; i++) {
+                if (!expandBeanList.get(i).getGroup().isGroupIsChecked()) {
+                    isAllChecked = false;
+                    break;
+                }
+            }
+            adapterCallback.callBack(isAllChecked, expandBeanList);
+
             notifyDataSetChanged();
         }
     }
